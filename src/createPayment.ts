@@ -22,7 +22,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
              */
             const errorMessages = fromZodError(validationResult.error).message;
 
-            return buildResponse(400, { error: errorMessages });
+            return buildResponse(422, { error: errorMessages });
         }
 
         const newPayment = validationResult.data;

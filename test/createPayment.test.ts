@@ -6,7 +6,7 @@ import { randomUUID } from 'crypto';
 jest.mock('crypto');
 
 describe('When the user request to create a new payment', () => {
-    it('Returns a 400 error if the input is invalid.', async () => {
+    it('Returns a 422 error if amount is missing.', async () => {
         const invalidPayment = {
             currency: 'AUD',
             // amount is missing
@@ -16,9 +16,25 @@ describe('When the user request to create a new payment', () => {
             body: JSON.stringify(invalidPayment),
         } as unknown as APIGatewayProxyEvent);
 
-        expect(result.statusCode).toBe(400);
+        expect(result.statusCode).toBe(422);
         expect(JSON.parse(result.body)).toEqual({
             error: "Validation error: Required at \"amount\""
+        });
+    });
+
+    it('Returns a 422 error if currency is invalid.', async () => {
+        const invalidPayment = {
+            currency: 'INVALID',
+            amount: 2000,
+        };
+
+        const result = await handler({
+            body: JSON.stringify(invalidPayment),
+        } as unknown as APIGatewayProxyEvent);
+
+        expect(result.statusCode).toBe(422);
+        expect(JSON.parse(result.body)).toEqual({
+            error: "Validation error: Invalid currency at \"currency\""
         });
     });
 

@@ -32,11 +32,20 @@ export const createPayment = async (payment: Payment) => {
     );
 };
 
+export enum ValidCurrencies {
+    USD = 'USD',
+    AUD = 'AUD',
+    // Add more valid currency as needed
+    // or we should validate against a list of valid currencies in the db instead
+}
 
 // we may want to move these schemas/types to a separate file in the future
 export const NewPaymentSchema = z.object({
-    amount: z.number(),
-    currency: z.string(),
+    amount: z.number()
+        .positive('Amount must be a positive number')
+        // change this based on the business requirement
+        .max(1000000, 'Amount must be less than or equal to 1,000,000'),
+    currency: z.nativeEnum(ValidCurrencies,  { message: 'Invalid currency' }),
 });
 
 export const PaymentSchema = NewPaymentSchema.extend({
