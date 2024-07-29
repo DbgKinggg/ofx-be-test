@@ -5,7 +5,7 @@ import { randomUUID } from 'crypto';
 
 jest.mock('crypto');
 
-describe('When the user pass in amount and currency to create a new payment', () => {
+describe('When the user request to create a new payment', () => {
     it('Returns a 400 error if the input is invalid.', async () => {
         const invalidPayment = {
             currency: 'AUD',
