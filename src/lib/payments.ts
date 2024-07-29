@@ -1,5 +1,6 @@
 import { DocumentClient } from './dynamodb';
 import { GetCommand, PutCommand, ScanCommand } from '@aws-sdk/lib-dynamodb';
+import { z } from 'zod';
 
 export const getPayment = async (paymentId: string): Promise<Payment | null> => {
     const result = await DocumentClient.send(
@@ -31,8 +32,15 @@ export const createPayment = async (payment: Payment) => {
     );
 };
 
-export type Payment = {
-    id: string;
-    amount: number;
-    currency: string;
-};
+
+// we may want to move these schemas/types to a separate file in the future
+export const NewPaymentSchema = z.object({
+    amount: z.number(),
+    currency: z.string(),
+});
+
+export const PaymentSchema = NewPaymentSchema.extend({
+    id: z.string(),
+});
+
+export type Payment = z.infer<typeof PaymentSchema>;
