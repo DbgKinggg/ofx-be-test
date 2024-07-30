@@ -31,7 +31,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
 
         await createPayment({
             ...newPayment,
-            id: paymentId,
+            paymentId: paymentId,
         });
 
         return buildResponse(201, { result: paymentId });

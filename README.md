@@ -2,6 +2,10 @@
 
 ## Note from Sam
 
+Two new packages were added, `zod` and `zod-validation-error` for better and easier validation.
+
+### Unit Test
+
 To run unit tests and show the test coverage, run:
 
 ```
@@ -10,7 +14,32 @@ npm test -- --coverage
 
 I got the test coverage to 100% in this project, but in a more complex project, it's impossible to unit test everything. However, we should still aim to get to 100% as much as possible.
 
-Two new packages were added, `zod` and `zod-validation-error` for better and easier validation.
+### Deployment
+
+To deploy the project to AWS via CDK, run the bootstrap command to set up the necessary infrastructure for deployment.
+
+```
+npx cdk bootstrap --profile yourProfile
+```
+
+After that, we can run the deploy script
+
+```
+ npx cdk deploy --profile yourProfile --require-approval=never
+```
+
+### Issues in the be-test-stack
+
+- The Dynamo DB table is created as `PaymentsTable`, however, is referenced as `Payments` in the code, I have changed the stack to create a `Payments`  table instead
+- The `Payments` table requires a `paymentId` partition key, to avoid storing two ids in the table, I have changed the `Payment` Type to be as below
+
+  ```
+  type Payment = {
+      amount: number;
+      currency: ValidCurrencies;
+      paymentId: string;
+  }
+  ```
 
 ---
 

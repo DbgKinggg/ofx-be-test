@@ -123,7 +123,7 @@ describe('listPayments', () => {
 describe('createPayment', () => {
     // mocked payment object
     const payment = {
-        id: '111',
+        paymentId: '111',
         amount: 99,
         currency: ValidCurrencies.USD
     };

@@ -1,7 +1,7 @@
 import { DocumentClient } from './dynamodb';
 import { GetCommand, PutCommand, ScanCommand } from '@aws-sdk/lib-dynamodb';
 import { z } from 'zod';
-import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
+import { marshall } from '@aws-sdk/util-dynamodb'
 
 export const getPayment = async (paymentId: string): Promise<Payment | null> => {
     const result = await DocumentClient.send(
@@ -29,7 +29,7 @@ export const listPayments = async (currency?: string) => {
     const command = new ScanCommand(params);
     const response = await DocumentClient.send(command);
 
-    return response.Items ? response.Items.map(item => unmarshall(item)) : [];
+    return response.Items ? response.Items.map(item => item) : [];
 };
 
 export const createPayment = async (payment: Payment) => {
@@ -58,7 +58,7 @@ export const NewPaymentSchema = z.object({
 });
 
 export const PaymentSchema = NewPaymentSchema.extend({
-    id: z.string(),
+    paymentId: z.string(),
 });
 
 export type Payment = z.infer<typeof PaymentSchema>;
