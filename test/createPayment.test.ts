@@ -77,7 +77,7 @@ describe('When the user request to create a new payment', () => {
         };
 
         const mockPaymentId = 'mocked-uuid';
-        const mockPayment = { ...newPayment, id: mockPaymentId };
+        const mockPayment = { ...newPayment, paymentId: mockPaymentId };
 
         // Mock the createPayment function
         const createPaymentMock = jest.spyOn(payments, 'createPayment').mockImplementation(() => Promise.resolve());;

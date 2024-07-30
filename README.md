@@ -2,7 +2,8 @@
 
 ## Note from Sam
 
-Two new packages were added, `zod` and `zod-validation-error` for better and easier validation.
+- Two new packages were added, `zod` and `zod-validation-error` for better and easier validation.
+- The `listPayments` endpoint accepts a query param `currency` to allow the user to fetch a list of payments by currency
 
 ### Unit Test
 
@@ -30,7 +31,8 @@ After that, we can run the deploy script
 
 ### Issues in the be-test-stack
 
-- The Dynamo DB table is created as `PaymentsTable`, however, is referenced as `Payments` in the code, I have changed the stack to create a `Payments`  table instead
+- The Dynamo DB table is created as `PaymentsTable`, however, is referenced as `Payments` in the code, I have changed the stack to create a `Payments` table instead
+
 - The `Payments` table requires a `paymentId` partition key, to avoid storing two ids in the table, I have changed the `Payment` Type to be as below
 
   ```

@@ -1,16 +1,16 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { buildResponse, parseInput } from './lib/apigateway';
+import { buildResponse } from './lib/apigateway';
 import { listPayments, ValidCurrencies } from './lib/payments';
 import { z } from 'zod';
 import { fromZodError } from 'zod-validation-error';
 
 export const PaymentListSchema = z.object({
-    currency: z.nativeEnum(ValidCurrencies,  { message: 'Invalid currency' }).optional(),
+    currency: z.nativeEnum(ValidCurrencies, { message: 'Invalid currency' }).optional(),
 });
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     try {
-        const parsedInput = parseInput(event.body || '{}');
+        const parsedInput = event.queryStringParameters || {};
         const validationResult = PaymentListSchema.safeParse(parsedInput);
 
         if (!validationResult.success) {

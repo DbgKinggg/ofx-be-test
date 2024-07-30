@@ -1,7 +1,6 @@
 import { DocumentClient } from './dynamodb';
 import { GetCommand, PutCommand, ScanCommand } from '@aws-sdk/lib-dynamodb';
 import { z } from 'zod';
-import { marshall } from '@aws-sdk/util-dynamodb'
 
 export const getPayment = async (paymentId: string): Promise<Payment | null> => {
     const result = await DocumentClient.send(
@@ -21,9 +20,9 @@ export const listPayments = async (currency?: string) => {
 
     if (currency) {
         params.FilterExpression = 'currency = :currency';
-        params.ExpressionAttributeValues = marshall({
+        params.ExpressionAttributeValues = {
             ':currency': currency,
-        });
+        };
     }
 
     const command = new ScanCommand(params);

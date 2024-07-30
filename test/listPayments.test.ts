@@ -43,7 +43,7 @@ describe('when the user request to list all payments', () => {
 describe('when the user request to list all payments with a specific currency', () => {
     it('returns 422 error if the currency is invalid', async () => {
         const result = await handler({
-            body: JSON.stringify({ currency: 'INVALID' }),
+            queryStringParameters: { currency: 'INVALID' },
         } as unknown as APIGatewayProxyEvent);
 
         expect(result.statusCode).toBe(422);
@@ -54,7 +54,7 @@ describe('when the user request to list all payments with a specific currency', 
         const listPaymentsMock = jest.spyOn(payments, 'listPayments').mockResolvedValueOnce(mockPayments);
 
         const result = await handler({
-            body: JSON.stringify({ currency: 'AUD' }),
+            queryStringParameters: { currency: 'AUD' },
         } as unknown as APIGatewayProxyEvent);
 
         expect(result.statusCode).toBe(200);

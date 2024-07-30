@@ -1,7 +1,6 @@
 import { DocumentClient } from '../../src/lib/dynamodb';
 import { GetCommand, PutCommand, ScanCommand } from '@aws-sdk/lib-dynamodb';
 import { getPayment, listPayments, createPayment, ValidCurrencies } from '../../src/lib/payments';
-import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 
 // Mock the dependencies
 jest.mock('../../src/lib/dynamodb', () => ({
@@ -13,11 +12,6 @@ jest.mock('@aws-sdk/lib-dynamodb', () => ({
     GetCommand: jest.fn(),
     ScanCommand: jest.fn(),
     PutCommand: jest.fn(),
-}));
-
-jest.mock('@aws-sdk/util-dynamodb', () => ({
-    marshall: jest.fn().mockImplementation((data) => data),
-    unmarshall: jest.fn().mockImplementation((data) => data),
 }));
 
 beforeEach(() => {
@@ -66,7 +60,7 @@ describe('getPayment', () => {
 describe('listPayments', () => {
     it('should return a list of payments when no currency filter is applied', async () => {
         const payments = [{ paymentId: '123', amount: 100 }];
-        (DocumentClient.send as jest.Mock).mockResolvedValue({ Items: payments.map(payment => marshall(payment)) });
+        (DocumentClient.send as jest.Mock).mockResolvedValue({ Items: payments.map(payment => payment) });
 
         const result = await listPayments();
 
@@ -81,7 +75,7 @@ describe('listPayments', () => {
     it('should return a filtered list of payments when a currency filter is applied', async () => {
         const currency = 'USD';
         const payments = [{ paymentId: '123', amount: 100, currency }];
-        (DocumentClient.send as jest.Mock).mockResolvedValue({ Items: payments.map(payment => marshall(payment)) });
+        (DocumentClient.send as jest.Mock).mockResolvedValue({ Items: payments.map(payment => payment) });
 
         const result = await listPayments(currency);
 
