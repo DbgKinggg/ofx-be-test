@@ -30,6 +30,22 @@ describe('When the user requests the records for a specific payment', () => {
         expect(getPaymentMock).toHaveBeenCalledWith(paymentId);
     });
 
+    it('Returns a 500 error if an unexpected error occurs.', async () => {
+        const paymentId = randomUUID();
+        const getPaymentMock = jest.spyOn(payments, 'getPayment').mockRejectedValueOnce(new Error('Something went wrong'));
+
+        const result = await handler({
+            pathParameters: {
+                id: paymentId,
+            },
+        } as unknown as APIGatewayProxyEvent);
+
+        expect(result.statusCode).toBe(500);
+        expect(JSON.parse(result.body)).toEqual({ message: 'Internal Server Error' });
+
+        expect(getPaymentMock).toHaveBeenCalledWith(paymentId);
+    });
+
     it('Returns the payment matching their input parameter.', async () => {
         const paymentId = randomUUID();
         const mockPayment = {
